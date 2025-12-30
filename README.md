@@ -1,5 +1,3 @@
 # dotfiles 
 
-symlink to proper location 
-
-`ln -s "$(pwd -P)" ~/.config/nvim`
+symlink to proper location e.g. `ln -s "$(pwd -P)/.zshrc" ~/.zshrc`
