@@ -15,3 +15,8 @@ setopt HIST_IGNORE_ALL_DUPS     # Delete an old recorded event if a new event is
 
 alias py="python3"
 alias nv="nvim"
+
+# Automatically list directory contents after cd
+function chpwd() {
+  ls
+}
