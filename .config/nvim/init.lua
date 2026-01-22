@@ -8,6 +8,7 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
   { "mason-org/mason.nvim", lazy = false, opts = {} },
+  
   { 
     "neovim/nvim-lspconfig",
     config = function()
@@ -30,12 +31,15 @@ require("lazy").setup({
   },
 
   {
-  "stevearc/conform.nvim",
+    "stevearc/conform.nvim",
     config = function()
     require("conform").setup({
       formatters_by_ft = {
+        python = { "black", "isort" },
         javascript = { "prettier" },
+        javascriptreact = { "prettier" },
         typescript = { "prettier" },
+        typescriptreact   = { "prettier" },
       },
       format_on_save = true,
       })
