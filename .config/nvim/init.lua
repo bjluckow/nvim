@@ -9,12 +9,32 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
   { "mason-org/mason.nvim", lazy = false, opts = {} },
   
-  { 
+  {
     "neovim/nvim-lspconfig",
+    dependencies = { "hrsh7th/cmp-nvim-lsp" },
     config = function()
-    vim.lsp.enable("pyright")
-    end
-  },
+      local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
+      -- Python
+      vim.lsp.config("pyright", {
+        capabilities = capabilities,
+      })
+
+      -- Go
+      vim.lsp.config("gopls", {
+        capabilities = capabilities,
+        settings = {
+          gopls = {
+            completeUnimported = true,
+            staticcheck = true,
+          },
+        },
+      })
+
+      vim.lsp.enable("pyright")
+      vim.lsp.enable("gopls")
+    end,
+},
 
   {
     "nvim-tree/nvim-tree.lua",
@@ -44,6 +64,17 @@ require("lazy").setup({
       format_on_save = true,
       })
     end,
+  },
+
+  {
+    "hrsh7th/nvim-cmp",
+    dependencies = {
+      "hrsh7th/cmp-nvim-lsp",
+      "hrsh7th/cmp-buffer",
+      "hrsh7th/cmp-path",
+      "L3MON4D3/LuaSnip",
+      "saadparwaiz1/cmp_luasnip",
+  },
   }
 })
 
@@ -108,3 +139,25 @@ vim.api.nvim_create_autocmd("InsertLeave", {
 vim.keymap.set("n", "<leader>f", function()
   require("conform").format()
 end, { desc = "Format buffer" })
+
+-- cmp
+local cmp = require("cmp")
+
+cmp.setup({
+  snippet = {
+    expand = function(args)
+      require("luasnip").lsp_expand(args.body)
+    end,
+  },
+  mapping = cmp.mapping.preset.insert({
+    ["<C-Space>"] = cmp.mapping.complete(),
+    ["<CR>"] = cmp.mapping.confirm({ select = true }),
+    ["<Tab>"] = cmp.mapping.select_next_item(),
+    ["<S-Tab>"] = cmp.mapping.select_prev_item(),
+  }),
+  sources = {
+    { name = "nvim_lsp" },
+    { name = "buffer" },
+    { name = "path" },
+  },
+})
