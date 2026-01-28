@@ -9,7 +9,7 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
   { "mason-org/mason.nvim", lazy = false, opts = {} },
   
-  {
+ {
     "neovim/nvim-lspconfig",
     dependencies = { "hrsh7th/cmp-nvim-lsp" },
     config = function()
@@ -34,7 +34,7 @@ require("lazy").setup({
       vim.lsp.enable("pyright")
       vim.lsp.enable("gopls")
     end,
-},
+  },
 
   {
     "nvim-tree/nvim-tree.lua",
@@ -130,25 +130,23 @@ require("lazy").setup({
             require("luasnip").lsp_expand(args.body)
           end,
         },
+
         mapping = cmp.mapping.preset.insert({
-          ["<C-Space>"] = cmp.mapping.complete(),
-          ["<CR>"] = cmp.mapping.confirm({ select = true }),
+          ["<CR>"] = cmp.mapping.confirm({
+            select = true,
+            behavior = cmp.ConfirmBehavior.Replace,
+          }),
           ["<Tab>"] = cmp.mapping.select_next_item(),
           ["<S-Tab>"] = cmp.mapping.select_prev_item(),
         }),
+
         sources = {
-          { name = "nvim_lsp" },
-          { name = "buffer" },
-          { name = "path" },
+          { name = "nvim_lsp" }, -- member access, struct fields, methods
+          { name = "buffer" },   -- words in file
+          { name = "path" },     -- filesystem
         },
       })
-
-      local cmp_autopairs = require("nvim-autopairs.completion.cmp")
-      cmp.event:on(
-        "confirm_done",
-        cmp_autopairs.on_confirm_done()
-      )
-    end
+    end,
   },
 
   {
@@ -156,6 +154,11 @@ require("lazy").setup({
     event = "InsertEnter",
     config = function()
       require("nvim-autopairs").setup({})
+
+      -- integrate with cmp
+      local cmp_autopairs = require("nvim-autopairs.completion.cmp")
+      local cmp = require("cmp")
+      cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
     end,
   },
 })
@@ -179,4 +182,6 @@ vim.api.nvim_create_autocmd("CursorHold", {
     end
   end,
 })
+
+local t = { foo = 1 }
 
