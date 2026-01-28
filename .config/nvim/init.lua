@@ -9,7 +9,13 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
   { "mason-org/mason.nvim", lazy = false, opts = {} },
   
- {
+  -- color scheme
+  {
+    "sainnhe/everforest", -- https://dotfyle.com/plugins/sainnhe/everforest
+    lazy = false,
+  },
+
+  {
     "neovim/nvim-lspconfig",
     dependencies = { "hrsh7th/cmp-nvim-lsp" },
     config = function()
@@ -210,3 +216,5 @@ vim.api.nvim_create_autocmd("CursorHold", {
 
 vim.cmd("syntax enable")
 vim.cmd("syntax on")
+
+vim.cmd.colorscheme("everforest") -- https://dotfyle.com/neovim/colorscheme/top
